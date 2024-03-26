@@ -1,0 +1,39 @@
+# Ignore Visual Studio files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.cache
+*.csproj.user
+*.pidb
+*.log
+*.scc
+*.tlb
+*.tlh
+*.bak
+*.swp
+*.vspscc
+*.vssscc
+*.vspa
+*.reserve
+*.svclog
+*.filters
+*.react.tsx
+*.react.js
+*.jsx
+*.ts
+*.tsx
+
+# Ignore NuGet Packages
+*.nupkg
+**/packages/*
+**/artifacts/*
+**/bin/*
+**/obj/*
+**/node_modules/*
+
+# Ignore DNX artifacts
+project.lock.json
+project.lock.snippets.json
+*.kproj
+*.vs

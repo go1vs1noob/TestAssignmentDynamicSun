@@ -1,0 +1,210 @@
+﻿@using System.Globalization
+@model List<AssignmentDynamicSun.Models.Weather>
+
+@{
+	ViewData["Title"] = "Weather Data";
+}
+
+<form method="get" action="@Url.Action("Index")">
+	<div class="row">
+		<div class="col-md-3">
+			<select class="form-select" name="year">
+				<option value="">Отфильтровать по году</option>
+				@for (int i = DateTime.Now.Year; i >= 2000; i--)
+				{
+					@if (ViewBag.Year == @i)
+					{
+										<option value="@i" selected>@i</option>
+					}
+					else
+					{
+										<option value="@i">@i</option>
+					}
+				}
+			</select>
+		</div>
+		<div class="col-md-3">
+			<select class="form-select" name="month">
+				<option value="">Отфильтровать по месяцу</option>
+				@for (int i = 1; i <= 12; i++)
+				{
+					var monthName = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i);
+					var capitalizedMonth = char.ToUpper(monthName[0]) + monthName.Substring(1); 
+					@if (ViewBag.Month == @i)
+					{
+												<option value="@i" selected>@capitalizedMonth</option>
+					}
+					else
+					{
+												 <option value="@i">@capitalizedMonth</option>
+					}
+				}
+			</select>
+		</div>
+		<div class="col-md-2">
+			<button type="submit" class="btn btn-outline-dark">Применить фильтры</button>
+		</div>
+		<div class="col-md-3">
+			<div class="row justify-content-center">
+	<div class="col-auto">
+					@if (ViewBag.PageCount > 1)
+					{
+				<nav aria-label="Page navigation example">
+				<ul class="pagination">
+								@if (ViewBag.CurrentPage > 1)
+								{ 
+									<li class="page-item">
+											<a class="page-link" 
+											href="?page=@(ViewBag.CurrentPage-1)&year=@ViewBag.Year&month=@ViewBag.Month"
+											aria-label="Previous">
+											<span aria-hidden="true">&laquo;</span>
+										</a>
+									</li>
+								}
+								else
+								{
+											 <li class="page-item disabled">
+												  <a class="page-link" href="#" tabindex="-1" aria-disabled="true"><span aria-hidden="true">&laquo;</span></a>
+										</li>
+								}
+								@if (ViewBag.CurrentPage > 1 && ViewBag.CurrentPage < ViewBag.PageCount)
+								{
+									@for (int i = ViewBag.CurrentPage - 1; i <= ViewBag.CurrentPage + 1; i++)
+									{
+										@if (i == ViewBag.CurrentPage)
+										{
+																		<li class="page-item active"><a class="page-link" href="?page=@i&year=@ViewBag.Year&month=@ViewBag.Month">@i</a></li>
+										}
+										else
+										{
+																		<li class="page-item"><a class="page-link" href="?page=@i&year=@ViewBag.Year&month=@ViewBag.Month">@i</a></li>
+										}
+									}
+								}
+								else
+								{
+									@if (ViewBag.CurrentPage <= 1)
+									{
+										@for (int i = 1; i <= 1 + 2; i++)
+										{
+											@if (i == ViewBag.CurrentPage)
+											{
+																						<li class="page-item active"><a class="page-link" href="?page=@i&year=@ViewBag.Year&month=@ViewBag.Month">@i</a></li>
+											}
+											else
+											{
+																						<li class="page-item"><a class="page-link" href="?page=@i&year=@ViewBag.Year&month=@ViewBag.Month">@i</a></li>
+											}
+										}
+									}
+									else
+									{
+										@for (int i = ViewBag.CurrentPage - 2; i <= ViewBag.CurrentPage; i++)
+										{
+											@if (i == ViewBag.CurrentPage)
+											{
+																						<li class="page-item active"><a class="page-link" href="?page=@i&year=@ViewBag.Year&month=@ViewBag.Month">@i</a></li>
+											}
+											else
+											{
+																						<li class="page-item"><a class="page-link" href="?page=@i&year=@ViewBag.Year&month=@ViewBag.Month">@i</a></li>
+											}
+										}
+									}
+								}
+
+								@if (ViewBag.CurrentPage < ViewBag.PageCount)
+								{
+										<li class="page-item">
+											<a class="page-link" href="?page=@(ViewBag.CurrentPage+1)&year=@ViewBag.Year&month=@ViewBag.Month" aria-label="Next">
+												<span aria-hidden="true">&raquo;</span>
+											</a>
+										</li>
+								}
+								else
+								{
+												 <li class="page-item disabled">
+											  <a class="page-link" href="#" tabindex="-1" aria-disabled="true"><span aria-hidden="true">&raquo;</span></a>
+									</li>
+								}
+					</ul>
+				</nav>
+					}
+	</div>
+</div>
+
+		</div>
+		 <div class="col-md-1 text-end"> 
+			<a class="btn btn-dark" type="button" asp-area="" asp-controller="Home" asp-action="Index">Назад</a>
+		</div>
+	</div>
+</form>
+
+<div class="table-responsive">
+	<table class="table table-hover table-bordered align-middle mt-3">
+		<thead>
+			<tr>
+				<th class="text-center" scope="col">Дата</th>
+				<th class="text-center" scope="col">Время</th>
+				<th class="text-center" scope="col">Температура</th>
+				<th class="text-center" scope="col">Влажность воздуха</th>
+				<th class="text-center" scope="col">Точка росы</th>
+				<th class="text-center" scope="col">Давление</th>
+				<th class="text-center" scope="col">Направление ветра</th>
+				<th class="text-center" scope="col">Скорость ветра</th>
+				<th class="text-center" scope="col">Облачность</th>
+				<th class="text-center" scope="col">Нижняя граница облачности</th>
+				<th class="text-center" scope="col">Горизонтальная видимость</th>
+				<th class="text-center" scope="col">Природные явления</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+					<tr>
+							<td class="text-center">@item.DateTime.Date.ToShortDateString()</td>
+							<td class="text-center">@item.DateTime.TimeOfDay</td>
+							<td class="text-center">@(item.Temperature)</td>
+							<td class="text-center">@(item.Humidity)</td>
+							<td class="text-center">@(item.DewPoint)</td>
+							<td class="text-center">@(item.AirPressure)</td>
+							<td class="text-center">@(item.WindDirection)</td>
+							<td class="text-center">@(item.WindSpeed)</td>
+							<td class="text-center">@(item.Cloudiness)</td>
+							<td class="text-center">@(item.CloudBase)</td>
+							<td class="text-center">@(item.HorizontalVisibility)</td>
+							<td class="text-center">@(item.NaturalPhenomena)</td>
+					</tr>
+			}
+		</tbody>
+	</table>
+</div>
+
+
+
+
+			<style>
+	.pagination .page-link {
+		color: #000000; 
+		background-color: #ffffff; 
+		border-color: #000000; 
+	}
+
+	.pagination .page-link:hover {
+		color: #ffffff; 
+		background-color: #000000; 
+		border-color: #000000; 
+	}
+
+	.pagination .page-item.active .page-link {
+		color: #ffffff; 
+		background-color: #000000; 
+		border-color: #000000; 
+	}
+
+	.pagination .page-item.disabled .page-link {
+		color: #6c757d; 
+		background-color: #ffffff; 
+		border-color: #dee2e6; 
+	}
+</style>
