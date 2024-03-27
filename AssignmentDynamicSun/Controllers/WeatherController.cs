@@ -59,6 +59,7 @@ namespace AssignmentDynamicSun.Controllers
         {
             try
             {
+                IList<Weather> weatherModelsToAdd = new List<Weather>();
                 foreach (var fileInput in fileInputs)
                 {
                     ExcelData excelData = new(fileInput);
@@ -73,10 +74,11 @@ namespace AssignmentDynamicSun.Controllers
                         }
                         else
                         {
-                            _dbContext.Weathers.Add(newWeatherModel);
+                            weatherModelsToAdd.Add(newWeatherModel);
                         }
                     }
                 }
+                _dbContext.Weathers.AddRange(weatherModelsToAdd);
                 _dbContext.SaveChanges();
             }
             catch (Exception ex)
