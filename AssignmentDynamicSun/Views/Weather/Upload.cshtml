@@ -1,16 +1,15 @@
 ﻿<div class="pt-5">
-    <h1 class="display-4 text-center">Загрузите Excel файлы</h1>
-    <div class="d-grid mt-5 col-6 mx-auto">
-        <form method="post" enctype="multipart/form-data" asp-action="Upload" asp-controller="Weather">
-            <div class="mb-3">
-                <label for="fileInput" class="form-label fs-5">Выберите файлы с диска:</label>
-                <input type="file" class="form-control form-control-lg" id="fileInput" name="fileInputs" multiple required>
-            </div>
-            <div class="d-grid gap-2 mx-auto">
-                <button type="submit" class="btn btn-outline-dark btn-lg" id="uploadBtn">Загрузить</button>
-                <a class="btn btn-dark btn-lg" type="button" asp-area="" asp-controller="Home" asp-action="Index">Назад</a>
-            </div>
-        </form>
-    </div>
+   <h1 class="display-4 text-center">Загрузите Excel файлы</h1>
+   <div class="d-grid mt-5 col-6 mx-auto">
+      <form method="post" enctype="multipart/form-data" asp-action="Upload" asp-controller="Weather">
+         <div class="mb-3">
+            <label for="fileInput" class="form-label fs-5">Выберите файлы с диска:</label>
+            <input type="file" class="form-control form-control-lg" id="fileInput" name="fileInputs" multiple required>
+         </div>
+         <div class="d-grid gap-2 mx-auto">
+            <button type="submit" class="btn btn-outline-dark btn-lg" id="uploadBtn">Загрузить</button>
+            <a class="btn btn-dark btn-lg" type="button" asp-area="" asp-controller="Home" asp-action="Index">Назад</a>
+         </div>
+      </form>
+   </div>
 </div>
-
