@@ -3,7 +3,7 @@ using AssignmentDynamicSun.Helpers;
 using AssignmentDynamicSun.Interfaces;
 using AssignmentDynamicSun.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace AssignmentDynamicSun.Controllers
 {
@@ -27,8 +27,8 @@ namespace AssignmentDynamicSun.Controllers
             if (!ModelState.IsValid)
             {
                 RedirectToAction("BadRequestPage");
-			}
-			if (year.HasValue)
+            }
+            if (year.HasValue)
             {
                 query = query.Where(w => w.DateTime.Year == year);
             }
@@ -63,19 +63,31 @@ namespace AssignmentDynamicSun.Controllers
                 {
                     ExcelData excelData = new(fileInput);
                     await excelData.ReadFromExcelFile(skipRowsFromStartInSheet: 4);
-                    _dbContext.AddRange(_excelService.CreateWeatherModels(excelData));
+                    var newWeatherModels = _excelService.CreateWeatherModels(excelData);
+                    foreach (var newWeatherModel in newWeatherModels)
+                    {
+                        var weatherModelToUpdate = await _dbContext.Weathers.FirstOrDefaultAsync(w => w.DateTime == newWeatherModel.DateTime);
+                        if (weatherModelToUpdate != null)
+                        {
+                            TransferValuesBetweenWeatherModels(weatherModelToUpdate, newWeatherModel);
+                        }
+                        else
+                        {
+                            _dbContext.Weathers.Add(newWeatherModel);
+                        }
+                    }
                 }
                 _dbContext.SaveChanges();
-			}
-			catch (Exception ex)
-			{
+            }
+            catch (Exception ex)
+            {
                 _logger.LogError(ex.Message);
-				return RedirectToAction("UploadFailure");
-			}
-			return RedirectToAction("UploadSuccess");
-		}
+                return RedirectToAction("UploadFailure");
+            }
+            return RedirectToAction("UploadSuccess");
+        }
 
-		public ActionResult UploadSuccess()
+        public ActionResult UploadSuccess()
         {
             return View();
         }
@@ -85,9 +97,24 @@ namespace AssignmentDynamicSun.Controllers
             return View();
         }
 
-		public ActionResult BadRequestPage()
-		{
-			return View();
-		}
-	}
+        public ActionResult BadRequestPage()
+        {
+            return View();
+        }
+
+        private void TransferValuesBetweenWeatherModels(Weather to, Weather from)
+        {
+            to.Temperature = from.Temperature;
+            to.AirPressure = from.AirPressure;
+            to.Cloudiness = from.Cloudiness;
+            to.CloudBase = from.CloudBase;
+            to.DewPoint = from.DewPoint;
+            to.Humidity = from.Humidity;
+            to.NaturalPhenomena = from.NaturalPhenomena;
+            to.WindDirection = from.WindDirection;
+            to.WindSpeed = from.WindSpeed;
+            to.HorizontalVisibility = from.HorizontalVisibility;
+        }
+
+    }
 }

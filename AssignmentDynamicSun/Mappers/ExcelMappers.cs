@@ -9,7 +9,7 @@ namespace AssignmentDynamicSun.Mappers
         {
 			_logger = logger;
         }
-        public Weather MapExcelWeatherRowToModel(List<string> row)
+        public Weather MapExcelWeatherRowToModel(List<string?> row)
 		{
 			var weather = new Weather();
 
@@ -42,30 +42,22 @@ namespace AssignmentDynamicSun.Mappers
 
 		private int? AssignIntOrNull(string? value)
 		{
-			if (string.IsNullOrEmpty(value))
-			{
-				return null;
-			}
 			try
 			{
 				return int.Parse(value);
 			}
-			catch(Exception ex) 
+			catch
 			{
 				return null;
 			}
 		}
 		private double? AssignDoubleOrNull(string? value)
 		{
-			if (string.IsNullOrEmpty(value))
-			{
-				return null;
-			}
 			try
 			{
 				return double.Parse(value);
 			}
-			catch(Exception ex)
+			catch
 			{
 				return null;
 			}
